@@ -1,0 +1,26 @@
+name: LCHWeeklyAutomation
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Runs every Monday at 9:00 AM
+  push:
+    branches: [ main ] # Also runs whenever code is merged to main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Cypress Tests
+        run: npx cypress run --browser chrome
+
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
